@@ -1,3 +1,4 @@
+const validator = require('validator')
 const { register, login } = require('../services/userService');
 const { parseError } = require('../util/parser');
 const authController = require('express').Router();
@@ -8,12 +9,19 @@ authController.get('/register', (req, res) => {
     })
 })
 authController.post('/register', async (req, res) => {
+    const regex = /^[a-zA-Z0-9]+$/i;
     try {
         if (req.body.username == "" || req.body.password == "") {
             throw new Error('All fields are required')
         }
         if (req.body.password != req.body.repass) {
             throw new Error('Passwords don\'t match')
+        }
+        if (regex.test(req.body.password ) == false) {
+            throw new Error('Passwords should be only latin letters and digits')
+        }
+        if (req.body.password.length < 5) {
+            throw new Error('Password must be at least 5 characters long')
         }
         const token = await register(req.body.username, req.body.password);
 
@@ -53,15 +61,15 @@ authController.post('/login', async (req, res) => {
 
     } catch (error) {
         const errors = parseError(error);
-           // TODO add error display to actual template from assignment
+        // TODO add error display to actual template from assignment
         res.render('login', {
             title: 'Login Page',
             errors,
-            body: {username: req.body.username}
+            body: { username: req.body.username }
         })
     }
 })
-authController.get('/logout', (req,res)=>{
+authController.get('/logout', (req, res) => {
     res.clearCookie('token');
     res.redirect('/')
 })
