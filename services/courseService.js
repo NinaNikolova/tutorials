@@ -3,8 +3,15 @@ const Course = require("../models/Course");
 function getAll() {
     return Course.find()
 }
-function getAllByDate() {
-    return Course.find().sort({createdAt: 1}).lean()
+function getAllByDate(search) {
+    const query = {}
+    if(search){
+       query.title = new RegExp(search, 'i')
+    }
+         return Course.find(query).sort({createdAt: 1}).lean()
+    
+  
+   
 }
 async function getRecent() {
     return Course.find({}).sort({usersCount:-1}).limit(3).lean();

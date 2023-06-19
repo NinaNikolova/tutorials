@@ -5,12 +5,15 @@ const homeController = require('express').Router();
 homeController.get('/', async (req, res) => {
  
     let courses = [];
+   
+    console.log(req.query)
     if (req.user) {
-        courses = await getAllByDate()
+         // search : method get in form we can see in URL like req.query --> ?search=express
+        courses = await getAllByDate(req.query.search)
         res.render('user-home', {
             title: 'Home Page',
             courses,
-            
+            search:req.query.search
         })
 
     } else {
