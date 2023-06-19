@@ -1,4 +1,4 @@
-const { create, deleteById, getAllByDate, getById, edit } = require('../services/courseService');
+const { create, deleteById, getAllByDate, getById, edit, enroll } = require('../services/courseService');
 const { parseError } = require('../util/parser');
 
 
@@ -34,18 +34,83 @@ courseController.post('/create', async (req, res) => {
 
 })
 
-courseController.get('/:id/details', (req, res) => {
+courseController.get('/:id/details', async (req, res) => {
+    const id = req.params.id
+    const course = await getById(id).lean()
+
+    course.isOwner = course.owner.toString() == req.user?._id.toString();
+    course.enrolled = course.users.map(x=>x.toString()).includes(req.user._id.toString())
+
     res.render('details', {
-        user: req.user
+        title: course.title,
+        course
     })
 })
-courseController.get('/:id/edit', (req, res) => {
+
+courseController.get('/:id/delete', async (req, res) => {
+    const id = req.params.id;
+    const course = await getById(id);
+    if (course?.owner.toString() != req.user?._id.toString()) {
+        return res.redirect('/auth/login')
+    }
+    await deleteById(id);
+    res.redirect(`/`)
+})
+courseController.get('/:id/edit', async (req, res) => {
+    const id = req.params.id;
+
+    const course = await getById(id).lean()
+    if (course?.owner.toString() != req.user?._id.toString()) {
+        return res.redirect('/auth/login')
+    }
     res.render('edit', {
-        user: req.user
+        title: 'Edit Page',
+        course
     })
 })
-courseController.get('/:id/delete', (req, res) => {
 
+courseController.post('/:id/edit', async (req, res) => {
+    const id = req.params.id;
+    const course = await getById(id).lean()
+
+    if (course?.owner.toString() != req.user?._id.toString()) {
+        return res.redirect('/auth/login')
+    }
+    try {
+        await edit(id, req.body)
+        res.redirect(`/course/${id}/details`)
+    } catch (error) {
+        const errors = parseError(error)
+         res.render('edit', {
+        title: 'Edit Page',
+        errors,
+        course:req.body
+    })
+   
+    }
 })
+courseController.get('/:id/enroll', async (req, res)=>{
+    const id = req.params.id;
+    const course = await getById(id)
+    try {
+        if (course.owner.toString() == req.user._id.toString()) {
+            course.isOwner = true;
+            throw new Error('Cannot enroll your own course');
+        }
+        if (course.users.map(x=>x.toString()).includes(req.user._id.toString())) {
+            course.enroll = true;
+            throw new Error('Cannot enroll twice')
+        }
+        await enroll(id, req.user._id)
+        res.redirect(`/course/${id}/details`)
 
+    } catch (error) {
+        res.render('details', {
+            course,
+            errors: parseError(error)
+        })
+    }
+
+    
+})
 module.exports = courseController;
