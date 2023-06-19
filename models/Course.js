@@ -6,19 +6,16 @@ const URL_PATTERN = /^https?:\/\/.+/i
 const courseSchema = new Schema({
     title: {
         type: String,
-        required: [true, 'Title is required'],
         unigue: true,
         minlength: [4, 'Course title must be at least 4 characters long'],
     },
     description: {
         type: String,
-        required: [true, 'Description is required'],
         minlength: [20, 'Description must be at least 20 characters long'],
         maxlength: [50, 'Description must be at most 50 characters long'],
     },
     imageUrl: {
         type: String,
-        required: [true, 'ImageUrl is required'],
         validate: {
             validator: (value) => { URL_PATTERN.test(value) },
             message: 'Invalid URL'
@@ -33,7 +30,7 @@ const courseSchema = new Schema({
         type: String,
         required: [true, 'Created At is required'],
         // !!! very important !!! - in my rest-api
-        default: ()=> (new Date()).toISOString().slice(0, 10)
+        default: () => (new Date()).toISOString().slice(0, 10)
     },
     owner: {
         type: Types.ObjectId,
