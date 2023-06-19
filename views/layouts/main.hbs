@@ -12,10 +12,10 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-            <a class="navbar-brand" href="/">Tutorials</a>
+            <a class="navbar-brand" href="/">{{title}}</a>
 
             <ul class="navbar-nav ml-auto">
-
+                {{#if user}}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Welcome, {{user.username}}</a>
                 </li>
@@ -23,7 +23,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/auth/logout">Logout</a>
                 </li>
-
+                {{else}}
                 <li class="nav-item">
                     <a class="nav-link" href="/auth/login">Login</a>
                 </li>
@@ -31,16 +31,16 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/auth/register">Register</a>
                 </li>
-
+                {{/if}}
             </ul>
         </nav>
-{{#if errors}}
+        {{#if errors}}
         <section class="notifications">
-              {{#each errors}}
+            {{#each errors}}
             <p class="notification-message">{{this}}</p>
             {{/each}}
         </section>
-{{/if}}
+        {{/if}}
         {{{body}}}
 
         <footer class="page-footer font-small">
