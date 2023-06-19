@@ -12,22 +12,12 @@
         <div class="container mt-3">
             {{#if courses}}
             <div class="row d-flex justify-content-center">
+               
+                    {{#each courses}}
 
-                {{#each courses}}
-                <div class="card-deck">
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="{{imageUrl}}" alt="Card image cap" width="400">
-                        <div class="card-body">
-                            <h4 class="card-title">{{title}}</h4>
-                            <small class="float-right">Enrolled: {{8}}</small>
-                        </div>
-                    </div>
+                    {{>course}}
                     {{/each}}
-
-
-
-                </div>
-
+              
             </div>
             {{else}}
             <h4 class="text-center">No courses...</h4>

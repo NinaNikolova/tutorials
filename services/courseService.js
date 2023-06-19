@@ -6,6 +6,9 @@ function getAll() {
 function getAllByDate() {
     return Course.find().sort({createdAt: 1}).lean()
 }
+async function getRecent() {
+    return Course.find({}).sort({usersCount:-1}).limit(3).lean();
+}
 function getById(id) {
     return Course.findById(id)
 }
@@ -20,5 +23,5 @@ function deleteById(id) {
 }
 
 module.exports = {
-    getAll, getAllByDate, deleteById, edit, create, getById
+    getAll, getAllByDate, deleteById, edit, create, getById, getRecent
 }

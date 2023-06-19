@@ -40,7 +40,8 @@ const courseSchema = new Schema({
         type: [Types.ObjectId],
         ref: "User",
         default: []
-    }
+    },
+    usersCount: {type: Number, default: 0}
 
 
 
