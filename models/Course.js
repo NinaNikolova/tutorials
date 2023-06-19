@@ -32,6 +32,8 @@ const courseSchema = new Schema({
     createdAt: {
         type: String,
         required: [true, 'Created At is required'],
+        // !!! very important !!! - in my rest-api
+        default: ()=> (new Date()).toISOString().slice(0, 10)
     },
     owner: {
         type: Types.ObjectId,
