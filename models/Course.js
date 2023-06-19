@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require('mongoose');
 
 // i - caseinsencetive
-const URL_PATTERN = /^https?:\/\/.+/i
+const URL_PATTERN = /^https?:\/\/.+/i;
 // TODO add user properties and validation according to assignment
 const courseSchema = new Schema({
     title: {

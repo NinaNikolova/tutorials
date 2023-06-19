@@ -33,9 +33,9 @@ async (req, res) => {
         if (req.body.password != req.body.repass) {
             throw new Error('Passwords don\'t match')
         }
-        if (regex.test(req.body.password ) == false) {
-            throw new Error('Passwords should be only latin letters and digits')
-        }
+        // if (regex.test(req.body.password ) == false) {
+        //     throw new Error('Passwords should be only latin letters and digits')
+        // }
         if (req.body.password.length < 5) {
             throw new Error('Password must be at least 5 characters long')
         }

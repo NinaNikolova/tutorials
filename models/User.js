@@ -7,7 +7,7 @@ const userSchema = new Schema({
         required: [true,'Username is required'],
         unique: true,
         minlength: [5, 'Username must be at least 5 characters long'],
-        match:[/^[a-zA-Z0-9]+$/i,'Username may contain only english letters and numbers']
+        // match:[/^[a-zA-Z0-9]+$/i,'Username may contain only english letters and numbers']
     },
     hashedPassword: {
         type: String,
